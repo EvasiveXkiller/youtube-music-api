@@ -44,6 +44,14 @@ class YoutubeMusicApi {
         })
     }
 
+    /**
+     * Creates the request to be sent for query
+     * @param endpointName
+     * @param inputVariables
+     * @param inputQuery
+     * @returns {Promise<unknown>}
+     * @private
+     */
     _createApiRequest(endpointName, inputVariables, inputQuery = {}) {
         const headers = Object.assign({
             'x-origin': this.client.defaults.baseURL,
@@ -73,6 +81,10 @@ class YoutubeMusicApi {
         })
     }
 
+    /**
+     * Initialize the client for usage
+     * @returns {Promise<unknown>} A ready to use API object
+     */
     initalize() {
         return new Promise((resolve, reject) => {
             this.client.get('/')
@@ -116,6 +128,11 @@ class YoutubeMusicApi {
         }
     }*/
 
+    /**
+     * Get search suggestions from Youtube Music
+     * @param query String query text to search
+     * @returns {Promise<unknown>} An object formatted with utils class
+     */
     getSearchSuggestions(query) {
         return new Promise((resolve, reject) => {
             this._createApiRequest('music/get_search_suggestions', {
@@ -134,6 +151,13 @@ class YoutubeMusicApi {
         })
     }
 
+    /**
+     * Searches for songs using the Youtube Music API
+     * @param query String query text to search
+     * @param categoryName Type of category to search
+     * @param _pageLimit Max pages to obtain
+     * @returns {Promise<unknown>} An object formatted by parsers.js
+     */
     search(query, categoryName, _pageLimit = 1) {
         return new Promise((resolve, reject) => {
             var result = {}
@@ -174,6 +198,11 @@ class YoutubeMusicApi {
         })
     }
 
+    /**
+     * Searches for the album with the album ID
+     * @param browseId The album ID, sanitized
+     * @returns {Promise<unknown>} An object formatted by the parser
+     */
     getAlbum(browseId) {
         if (_.startsWith(browseId, 'MPREb')) {
             return new Promise((resolve, reject) => {
@@ -195,6 +224,12 @@ class YoutubeMusicApi {
         }
     }
 
+    /**
+     * Gets the playlist using the Youtube Music API
+     * @param browseId The playlist ID, sanitized
+     * @param contentLimit Maximum content to get
+     * @returns {Promise<unknown>} An object formatted by the parser
+     */
     getPlaylist(browseId, contentLimit = 100) {
         if (_.startsWith(browseId, 'VL') || _.startsWith(browseId, 'PL')) {
             _.startsWith(browseId, 'PL') && (browseId = 'VL' + browseId)
@@ -245,6 +280,11 @@ class YoutubeMusicApi {
         }
     }
 
+    /**
+     * Gets the artist details from Youtube Music
+     * @param browseId The artist ID, sanitized
+     * @returns {Promise<unknown>} An object formatted by the artist page
+     */
     getArtist(browseId) {
         if (_.startsWith(browseId, 'UC')) {
             return new Promise((resolve, reject) => {
