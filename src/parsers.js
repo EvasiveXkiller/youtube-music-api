@@ -599,10 +599,12 @@ exports.parsePlaylistPage = context => {
             thumbnails: utils.fv(itemContext, 'musicThumbnailRenderer:thumbnails', true)
         })
     }
+    console.log(result)
     return result
 }
 
 exports.parseAlbumPage = context => {
+    console.log(context)
     const result = {
         title: '',
         description: '',

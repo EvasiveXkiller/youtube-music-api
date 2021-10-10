@@ -95,6 +95,7 @@ class YoutubeMusicApi {
                                 return JSON.parse(v.split(');')[0])
                             } catch (_) {}
                         }).filter(Boolean).forEach(cfg => (this.ytcfg = Object.assign(cfg, this.ytcfg)))
+                        // console.log(this.ytcfg)
                         resolve({
                             locale: this.ytcfg.LOCALE,
                             logged_in: this.ytcfg.LOGGED_IN
@@ -109,7 +110,7 @@ class YoutubeMusicApi {
         })
     }
 
-    /*_getContinuation(endpointName, continuation) {
+    _getContinuation(endpointName, continuation) {
         if ((continuation != [] && continuation instanceof Object) && continuation.continuation && continuation.clickTrackingParams) {
             return new Promise((resolve, reject) => {
                 this._createApiRequest(endpointName, {}, {
@@ -118,15 +119,15 @@ class YoutubeMusicApi {
                         itct: continuation.clickTrackingParams
                     })
                     .then(context => {
+                        console.log(context)
                         let parse = new Date()
                         let r = parsers.parseArtistSearchResult(context)
                         let o = new Date() - parse
                         resolve(r)
-
                     })
             })
         }
-    }*/
+    }
 
     /**
      * Get search suggestions from Youtube Music
@@ -139,13 +140,27 @@ class YoutubeMusicApi {
                     input: query
                 })
                 .then(content => {
-                    try {
-                        resolve(utils.fv(
-                            content, 'searchSuggestionRenderer:navigationEndpoint:query'
-                        ))
-                    } catch (error) {
-                        reject(error)
-                    }
+                    console.log(content)
+                    console.log(this.ytcfg)
+                    if (!content.hasOwnProperty("contents")) reject(`no results found`);
+
+                    const contents = content.contents[0].searchSuggestionsSectionRenderer.contents;
+                    const rendererCompressed = contents.map((searchSuggestionRenderer) => {
+                        return {
+                            track: searchSuggestionRenderer.searchSuggestionRenderer.suggestion.runs[0].text,
+                            artist: searchSuggestionRenderer.searchSuggestionRenderer.suggestion.runs[1]?.text ?? ""
+                        }
+                    })
+                    console.log(rendererCompressed)
+
+
+                    // try {
+                    //     resolve(utils.fv(
+                    //         content, 'searchSuggestionRenderer:navigationEndpoint:query'
+                    //     ))
+                    // } catch (error) {
+                    //     reject(error)
+                    // }
                 })
                 .catch(error => reject(error))
         })
@@ -166,6 +181,8 @@ class YoutubeMusicApi {
                     params: utils.getCategoryURI(categoryName)
                 })
                 .then(context => {
+                    const something = context;
+                    console.log(something)
                     try {
                         switch (_.upperCase(categoryName)) {
                             case 'SONG':
@@ -187,6 +204,7 @@ class YoutubeMusicApi {
                                 result = parsers.parseSearchResult(context)
                                 break
                         }
+
                         resolve(result)
                     } catch (error) {
                         return resolve({
