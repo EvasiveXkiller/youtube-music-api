@@ -2,6 +2,9 @@
 
 Unoffical Youtube Music API
 
+# Superseded by [youtube-moosick](https://github.com/EvasiveXkiller/youtube-moosick)
+Please use the new lib.
+
 ## Installation
 ```bash
 npm install youtube-music-api
