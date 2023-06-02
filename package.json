@@ -32,6 +32,6 @@
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
-    "typescript": "^4.3.5"
+    "typescript": "^5.1.3"
   }
 }
